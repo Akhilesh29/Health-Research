@@ -1,5 +1,5 @@
 # Health Research
-
+Health Research is a web app that helps people make sense of symptoms without jumping to conclusions. You sign in, describe what you’re feeling, and get a clear, structured readout: what might be going on, how urgent it feels, what to watch for, and practical next steps. Your checks are saved so you can see patterns over time. It can also suggest nearby doctors and hospitals based on where you are (or a location you enter for someone else), with map links and contact details when available. It’s built to feel calm and informative,not a replacement for a real doctor, but a better starting point than guessing alone.
 
 
 ## Architecture
@@ -15,7 +15,7 @@
 The project uses the [Groq API](https://console.groq.com/) for LLM inference. Groq is selected for its low-latency response times.
 
 - **Model:** `llama3-70b-8192`
-- **Use case:** Health research Q&A — the LLM receives the user's question and returns a research-informed response
+- **Use case:** Health research Q&A-the LLM receives the user's question and returns a research-informed response
 - **Key management:** API key is loaded from `.env` on the backend and never exposed to the client
 
 Request flow:
@@ -54,16 +54,6 @@ JWT_SECRET=your_jwt_secret
 PORT=5000
 NODE_ENV=development
 ```
-
-Create `frontend/.env.local`:
-
-```env
-NEXT_PUBLIC_API_URL=http://localhost:5000
-```
-
-> `.env` files are excluded from version control. Never commit secrets.
-
----
 
 ## Docker Setup
 
