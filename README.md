@@ -7,7 +7,6 @@ Health Research AI is a web app that helps people make sense of symptoms without
 ![Architecture](healthguide_architecture.svg)
 
 
-
 ---
 
 ## Groq API
