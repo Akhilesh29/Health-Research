@@ -19,8 +19,9 @@ export default function DashboardPage() {
   const user = useAuthStore((s) => s.user);
 
   const { data: stats, isLoading } = useQuery({
-    queryKey: ['stats'],
+    queryKey: ['stats', user?.id],
     queryFn: symptomsApi.stats,
+    enabled: !!user?.id,
   });
 
   const greeting = () => {

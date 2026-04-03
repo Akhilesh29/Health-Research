@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   Eye,
   EyeOff,
@@ -24,6 +25,7 @@ export default function AuthPage() {
 
   const setAuth = useAuthStore((s) => s.setAuth);
   const navigate = useNavigate();
+  const qc = useQueryClient();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
@@ -45,6 +47,8 @@ export default function AuthPage() {
             })
           : await authApi.login({ email: form.email, password: form.password });
 
+      // Prevent cross-account stale cache from previous sessions.
+      qc.clear();
       setAuth(data.user, data.token);
       navigate('/app/dashboard');
     } catch (err: unknown) {

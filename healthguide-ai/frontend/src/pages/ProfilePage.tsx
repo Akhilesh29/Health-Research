@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { User, Mail, Calendar, Shield, LogOut, Stethoscope } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -8,13 +8,16 @@ import { symptomsApi } from '../api/symptoms';
 export default function ProfilePage() {
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
+  const qc = useQueryClient();
 
   const { data: stats } = useQuery({
-    queryKey: ['stats'],
+    queryKey: ['stats', user?.id],
     queryFn: symptomsApi.stats,
+    enabled: !!user?.id,
   });
 
   const handleLogout = () => {
+    qc.clear();
     logout();
     navigate('/auth');
   };

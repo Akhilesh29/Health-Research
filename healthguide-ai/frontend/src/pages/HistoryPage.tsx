@@ -5,6 +5,7 @@ import { Trash2, ChevronDown, ChevronUp, ClipboardList, AlertCircle, Loader2 } f
 import { symptomsApi } from '../api/symptoms';
 import { SymptomCheck } from '../types';
 import SymptomResult from '../components/SymptomResult';
+import { useAuthStore } from '../store/authStore';
 
 const urgencyBadge = (level: string) => {
   const map: Record<string, string> = {
@@ -19,12 +20,13 @@ const urgencyBadge = (level: string) => {
 function CheckCard({ check }: { check: SymptomCheck }) {
   const [expanded, setExpanded] = useState(false);
   const qc = useQueryClient();
+  const user = useAuthStore((s) => s.user);
 
   const deleteMutation = useMutation({
     mutationFn: () => symptomsApi.delete(check.id),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['symptoms'] });
-      qc.invalidateQueries({ queryKey: ['stats'] });
+      qc.invalidateQueries({ queryKey: ['symptoms', user?.id] });
+      qc.invalidateQueries({ queryKey: ['stats', user?.id] });
     },
   });
 
@@ -87,10 +89,12 @@ function CheckCard({ check }: { check: SymptomCheck }) {
 
 export default function HistoryPage() {
   const [page, setPage] = useState(1);
+  const user = useAuthStore((s) => s.user);
 
   const { data, isLoading } = useQuery({
-    queryKey: ['symptoms', page],
+    queryKey: ['symptoms', user?.id, page],
     queryFn: () => symptomsApi.list(page, 10),
+    enabled: !!user?.id,
   });
 
   return (

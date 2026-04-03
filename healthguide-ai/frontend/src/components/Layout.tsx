@@ -7,6 +7,7 @@ import {
   LogOut,
   Plus,
 } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '../store/authStore';
 
 const navItems = [
@@ -19,8 +20,10 @@ const navItems = [
 export default function Layout() {
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
+  const qc = useQueryClient();
 
   const handleLogout = () => {
+    qc.clear();
     logout();
     navigate('/auth');
   };

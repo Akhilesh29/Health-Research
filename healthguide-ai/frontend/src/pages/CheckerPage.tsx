@@ -4,6 +4,7 @@ import { X, Plus, Loader2, Stethoscope, ChevronDown, MapPin } from 'lucide-react
 import { symptomsApi } from '../api/symptoms';
 import { SymptomCheck, SymptomCheckInput } from '../types';
 import SymptomResult from '../components/SymptomResult';
+import { useAuthStore } from '../store/authStore';
 
 const COMMON_SYMPTOMS = [
   'Headache', 'Fever', 'Cough', 'Fatigue', 'Nausea', 'Sore throat',
@@ -23,13 +24,14 @@ export default function CheckerPage() {
   const [showContext, setShowContext] = useState(false);
 
   const qc = useQueryClient();
+  const user = useAuthStore((s) => s.user);
 
   const mutation = useMutation({
     mutationFn: (data: SymptomCheckInput) => symptomsApi.create(data),
     onSuccess: (data) => {
       setResult(data);
-      qc.invalidateQueries({ queryKey: ['stats'] });
-      qc.invalidateQueries({ queryKey: ['symptoms'] });
+      qc.invalidateQueries({ queryKey: ['stats', user?.id] });
+      qc.invalidateQueries({ queryKey: ['symptoms', user?.id] });
     },
   });
 
